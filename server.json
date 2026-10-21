@@ -1,11 +1,13 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.lkcair/yfinance-ai",
+  "title": "yfinance-ai: Yahoo Finance",
   "description": "Yahoo Finance in 68 tools: stocks, crypto, forex, commodities, funds, options, analysts, calendars.",
   "repository": {
     "url": "https://github.com/lkcair/yfinance-ai-mcp",
     "source": "github"
   },
+  "websiteUrl": "https://github.com/lkcair/yfinance-ai-mcp",
   "version": "5.0.0",
   "packages": [
     {
