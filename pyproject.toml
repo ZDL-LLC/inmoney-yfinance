@@ -19,7 +19,7 @@ dependencies = ["yfinance>=1.7.0", "pandas>=2.2.0", "pydantic>=2.0.0", "requests
 
 [project.urls]
 Repository = "https://github.com/lkcair/yfinance-ai-mcp"
-Source = "https://github.com/lkcair/yfinance-ai"
+Homepage = "https://github.com/lkcair/yfinance-ai"
 
 [project.scripts]
 yfinance-ai = "yfinance_ai_mcp:main"
