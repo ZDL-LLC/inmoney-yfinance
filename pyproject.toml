@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "yfinance-ai"
+dynamic = ["version"]
+description = "MCP server and AI tool for Yahoo Finance: 68 tools for stocks, crypto, forex, commodities, funds and options"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "lkcair" }]
+keywords = ["mcp", "yfinance", "yahoo-finance", "stocks", "finance", "llm", "ai-tools"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
+dependencies = ["yfinance>=1.7.0", "pandas>=2.2.0", "pydantic>=2.0.0", "requests>=2.28.0", "mcp>=2.1"]
+
+[project.urls]
+Repository = "https://github.com/lkcair/yfinance-ai-mcp"
+Source = "https://github.com/lkcair/yfinance-ai"
+
+[project.scripts]
+yfinance-ai = "yfinance_ai_mcp:main"
+
+# yfinance_ai.py is an exact copy of lkcair/yfinance-ai (sync.sh); its header holds the version
+[tool.hatch.version]
+path = "yfinance_ai.py"
+pattern = "^version: (?P<version>\\S+)$"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["yfinance_ai.py", "yfinance_ai_mcp.py"]
+
+[tool.hatch.build.targets.sdist]
+only-include = ["yfinance_ai.py", "yfinance_ai_mcp.py", "README.md", "LICENSE", "server.json"]
