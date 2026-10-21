@@ -12,7 +12,7 @@ Prices and history, financial statements, ratios and valuation history, analyst 
 
 | Use it in | Install | Repo |
 |---|---|---|
-| Claude, Cursor, VS Code and other MCP clients | `uvx yfinance-ai@latest` | [yfinance-ai-mcp](https://github.com/lkcair/yfinance-ai-mcp) |
+| Claude, Cursor, VS Code, [LangChain](https://docs.langchain.com/oss/python/langchain/mcp), [Google ADK](https://google.github.io/adk-docs/tools-custom/mcp-tools/), [Strands Agents](https://strandsagents.com/docs/user-guide/sdk/tools/mcp-tools/) and other MCP clients | `uvx yfinance-ai@latest` | [yfinance-ai-mcp](https://github.com/lkcair/yfinance-ai-mcp) |
 | ClawHub skill for OpenClaw 🚀 Thousands of downloads | `openclaw skills install @lkcair/stocks` | [yfinance-ai-skill](https://github.com/lkcair/yfinance-ai-skill) |
 | OpenWebUI tool 🚀 Thousands of downloads | [Get it on openwebui.com](https://openwebui.com/posts/finance_data_pull_ai_tool_yahoo_finance_yfinance_fc928bb1) | [yfinance-ai](https://github.com/lkcair/yfinance-ai) |
 | Python | `from yfinance_ai import Tools` | [yfinance-ai](https://github.com/lkcair/yfinance-ai) |
@@ -49,6 +49,60 @@ Claude Desktop, Cursor, Windsurf and other clients, in the client's MCP config f
 `@latest` picks up new releases when the client starts. Without uv: `pip install yfinance-ai`, then use `"command": "yfinance-ai"` with no args.
 
 Listed in the [MCP Registry](https://registry.modelcontextprotocol.io) as `io.github.lkcair/yfinance-ai`. Every tool is read-only.
+
+## Agent frameworks
+
+The server runs over stdio with `uvx yfinance-ai@latest`, so any framework with MCP support can load all its tools.
+
+[LangChain](https://docs.langchain.com/oss/python/langchain/mcp): `pip install "langchain[mcp]" langchain-anthropic`
+```python
+import asyncio
+from langchain.agents import create_agent
+from langchain.mcp import MCPAdapter
+
+async def main():
+    config = {"mcpServers": {"yfinance-ai": {
+        "command": "uvx", "args": ["yfinance-ai@latest"],
+    }}}
+    async with MCPAdapter(config) as adapter:
+        tools = await adapter.list_tools()
+        agent = create_agent("claude-sonnet-5", tools)
+        result = await agent.ainvoke({"messages": [{"role": "user", "content": "What is Apple's P/E, and how does it compare with Microsoft and Google?"}]})
+        print(result["messages"][-1].content)
+
+asyncio.run(main())
+```
+
+[Google ADK](https://google.github.io/adk-docs/tools-custom/mcp-tools/): `pip install "google-adk[mcp]"`
+```python
+from google.adk.agents import LlmAgent
+from google.adk.tools.mcp_tool import McpToolset
+from google.adk.tools.mcp_tool.mcp_session_manager import StdioConnectionParams
+from mcp import StdioServerParameters
+
+root_agent = LlmAgent(
+    model="gemini-flash-latest",
+    name="yfinance_ai",
+    instruction="Answer with the yfinance-ai tools.",
+    tools=[McpToolset(connection_params=StdioConnectionParams(
+        server_params=StdioServerParameters(command="uvx", args=["yfinance-ai@latest"]),
+        timeout=60,
+    ))],
+)
+```
+
+[Strands Agents](https://strandsagents.com/docs/user-guide/sdk/tools/mcp-tools/): `pip install strands-agents`
+```python
+from mcp import stdio_client, StdioServerParameters
+from strands import Agent
+from strands.tools.mcp import MCPClient
+
+yfinance_ai = MCPClient(lambda: stdio_client(StdioServerParameters(
+    command="uvx", args=["yfinance-ai@latest"],
+)))
+agent = Agent(tools=[yfinance_ai])
+agent("What is Apple's P/E, and how does it compare with Microsoft and Google?")
+```
 
 ## Example questions
 
