@@ -24,7 +24,7 @@ Source = "https://github.com/lkcair/yfinance-ai"
 [project.scripts]
 yfinance-ai = "yfinance_ai_mcp:main"
 
-# yfinance_ai.py is an exact copy of lkcair/yfinance-ai (sync.sh); its header holds the version
+# The version comes from the yfinance_ai.py header
 [tool.hatch.version]
 path = "yfinance_ai.py"
 pattern = "^version: (?P<version>\\S+)$"
