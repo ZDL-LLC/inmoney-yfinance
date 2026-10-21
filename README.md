@@ -2,33 +2,47 @@
 
 <!-- mcp-name: io.github.lkcair/yfinance-ai -->
 
-[![PyPI](https://img.shields.io/pypi/v/yfinance-ai)](https://pypi.org/project/yfinance-ai/) [![Python](https://img.shields.io/pypi/pyversions/yfinance-ai)](https://pypi.org/project/yfinance-ai/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![MCP Registry](https://img.shields.io/badge/MCP%20Registry-io.github.lkcair%2Fyfinance--ai-blue)](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.lkcair/yfinance-ai)
+[![PyPI](https://img.shields.io/pypi/v/yfinance-ai)](https://pypi.org/project/yfinance-ai/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Yahoo Finance for Claude, Cursor, VS Code and any MCP client, in 68 tools.** Real-time quotes, history, financial statements, ratios and valuation history, analyst estimates and price targets, earnings, dividends, options, holders and insiders, funds and ETFs, crypto, forex, commodities, market movers, sectors and industries, and earnings, IPO, economic and split calendars.
+World's first AI-powered Yahoo Finance integration: 68 tools for stocks, ETFs, mutual funds, crypto, forex and commodities, in one Python file. Thousands of downloads on ClawHub and OpenWebUI.
 
-Powered by [**yfinance-ai**](https://github.com/lkcair/yfinance-ai), the Yahoo Finance toolkit with **thousands of downloads on ClawHub and OpenWebUI**.
+Prices and history, financial statements, ratios and valuation history, analyst estimates and price targets, earnings, dividends, options, holders and insiders, funds and ETFs, market movers, sectors and industries, and earnings, IPO, economic and split calendars.
 
-| Also available as | |
-|---|---|
-| 🦞 OpenClaw skill, thousands of downloads | `openclaw skills install @lkcair/stocks` ([ClawHub](https://clawhub.ai/lkcair/stocks), [skill repo](https://github.com/lkcair/yfinance-ai-skill)) |
-| 🌐 OpenWebUI tool, thousands of downloads | [openwebui.com](https://openwebui.com/posts/finance_data_pull_ai_tool_yahoo_finance_yfinance_fc928bb1) ([source](https://github.com/lkcair/yfinance-ai)) |
-| 📑 SEC EDGAR filings, same family | [sec-ai MCP server](https://github.com/lkcair/sec-ai-mcp) |
+| Use it in | Install | Repo |
+|---|---|---|
+| Claude, Cursor, VS Code and other MCP clients | `uvx yfinance-ai@latest` | [yfinance-ai-mcp](https://github.com/lkcair/yfinance-ai-mcp) |
+| OpenClaw, as a ClawHub skill (thousands of downloads) | `openclaw skills install @lkcair/stocks` | [yfinance-ai-skill](https://github.com/lkcair/yfinance-ai-skill) |
+| OpenWebUI, as a tool (thousands of downloads) | [Get it on openwebui.com](https://openwebui.com/posts/finance_data_pull_ai_tool_yahoo_finance_yfinance_fc928bb1) | [yfinance-ai](https://github.com/lkcair/yfinance-ai) |
+| Python | `from yfinance_ai import Tools` | [yfinance-ai](https://github.com/lkcair/yfinance-ai) |
 
-## Install: one command
+## How it fits together
 
-Needs [uv](https://docs.astral.sh/uv/getting-started/installation/). No API key, no account, no Docker.
+[`yfinance_ai.py`](https://github.com/lkcair/yfinance-ai/blob/main/yfinance_ai.py) is the whole toolkit: one file with a `Tools` class of async methods. Every platform runs that same file.
 
-**Claude Code**
+```
+yfinance_ai.py
+├── OpenWebUI   the file itself, added as a tool
+├── ClawHub     skill folder: SKILL.md, scripts/cli.py, scripts/yfinance_ai.py
+└── MCP         PyPI package yfinance-ai: yfinance_ai.py and yfinance_ai_mcp.py
+```
+
+In the skill, `cli.py` runs one function per command and `SKILL.md` tells the agent which function fits each question. In the MCP server, `yfinance_ai_mcp.py` registers every method as an MCP tool, with its parameters documented.
+
+## Install
+
+Needs [uv](https://docs.astral.sh/uv/getting-started/installation/). No API key.
+
+Claude Code:
 ```bash
 claude mcp add yfinance-ai -- uvx yfinance-ai@latest
 ```
 
-**VS Code**
+VS Code:
 ```bash
 code --add-mcp '{"name":"yfinance-ai","type":"stdio","command":"uvx","args":["yfinance-ai@latest"]}'
 ```
 
-**Claude Desktop, Cursor, Windsurf and any other MCP client**: add to the client's MCP config (`claude_desktop_config.json`, `.cursor/mcp.json`, ...)
+Claude Desktop, Cursor, Windsurf and other clients, in the client's MCP config file:
 ```json
 {
   "mcpServers": {
@@ -42,43 +56,33 @@ code --add-mcp '{"name":"yfinance-ai","type":"stdio","command":"uvx","args":["yf
 }
 ```
 
-`@latest` checks PyPI on each start, so you always run the newest release. Without uv: `pip install yfinance-ai` and use `"command": "yfinance-ai"` with no args.
+`@latest` picks up new releases when the client starts. Without uv: `pip install yfinance-ai`, then use `"command": "yfinance-ai"` with no args.
 
-## Ask it anything
+Listed in the [MCP Registry](https://registry.modelcontextprotocol.io) as `io.github.lkcair/yfinance-ai`. Every tool is read-only.
 
-- "Compare AAPL, MSFT and GOOGL on valuation and margins"
-- "What are analysts saying about NVIDIA? Price targets and recent upgrades"
-- "Is Apple buying back shares? Show shares outstanding over 5 years"
-- "Who reports earnings this week?" / "Economic calendar for this week" / "Upcoming IPOs"
-- "Top gainers today" / "Semiconductor industry: largest and fastest-growing companies"
-- "SPY top holdings and sector weights" / "Options chain for TSLA, nearest expiry"
-- "Bitcoin price" / "EUR/USD rate" / "Gold and oil today"
+## Example questions
 
-## Why yfinance-ai
+- What is Apple's P/E, and how does it compare with Microsoft and Google?
+- What are analysts saying about NVIDIA? Price targets and recent upgrades.
+- Who reports earnings this week?
+- Bitcoin price, EUR/USD rate and gold today.
 
-- **68 tools**, more than four times the most-starred yfinance MCP servers (15 and 9 tools), covering everything above in one server.
-- **Answers written for an AI**: readable text with context, not raw dataframes.
-- **Numbers checked at every release** against independent sources: revenue, net income, assets and TTM figures against SEC XBRL filings, prices and ratios against a second Yahoo endpoint.
-- **Every tool is read-only** (MCP annotations), with retries, validation and rate limiting.
-- **The same toolkit runs everywhere**: MCP, OpenClaw and OpenWebUI, with thousands of downloads on ClawHub and OpenWebUI.
-- **Built-in self-test**: ask "run the yfinance self-test".
-
-## Tools (68)
+## MCP tools (68)
 
 ### Quotes and history
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `get_stock_price` | `ticker` | Get current stock price and key metrics for a ticker symbol |
 | `get_stock_quote` | `ticker` | Get detailed quote with bid/ask, day range, and trading info |
 | `get_fast_info` | `ticker` | Get fast-access ticker information (lightweight, quick response) |
 | `get_historical_data` | `ticker, period="1y", interval="1d"` | Get historical price data for a stock |
 | `get_historical_price_on_date` | `ticker, date` | Get historical price for a specific date |
-| `download_multiple_tickers` | `tickers, period="1mo", interval="1d"` | Download historical data for multiple tickers at once (bulk operation) |
+| `download_multiple_tickers` | `tickers, period="1mo", interval="1d"` | Historical data for several tickers at once |
 
 ### Company
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `get_company_info` | `ticker` | Get detailed company information and business description |
 | `get_company_overview` | `ticker` | Company overview with context for every metric |
@@ -87,7 +91,7 @@ code --add-mcp '{"name":"yfinance-ai","type":"stdio","command":"uvx","args":["yf
 
 ### Financials
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `get_income_statement` | `ticker, period="annual"` | Get income statement data |
 | `get_balance_sheet` | `ticker, period="annual"` | Get balance sheet data |
@@ -100,7 +104,7 @@ code --add-mcp '{"name":"yfinance-ai","type":"stdio","command":"uvx","args":["yf
 
 ### Earnings and estimates
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `get_earnings_dates` | `ticker` | Get upcoming and past earnings dates with estimates |
 | `get_earnings_history` | `ticker` | Get historical earnings data with annual and quarterly figures |
@@ -112,7 +116,7 @@ code --add-mcp '{"name":"yfinance-ai","type":"stdio","command":"uvx","args":["yf
 
 ### Analysts
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `get_analyst_recommendations` | `ticker` | Get analyst recommendations and ratings |
 | `get_analyst_price_targets` | `ticker` | Get detailed analyst price targets for a stock |
@@ -120,7 +124,7 @@ code --add-mcp '{"name":"yfinance-ai","type":"stdio","command":"uvx","args":["yf
 
 ### Holders and insiders
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `get_institutional_holders` | `ticker` | Get major institutional holders and their ownership |
 | `get_major_holders` | `ticker` | Get major holders summary (institutions, insiders, public float) |
@@ -131,7 +135,7 @@ code --add-mcp '{"name":"yfinance-ai","type":"stdio","command":"uvx","args":["yf
 
 ### Dividends and corporate actions
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `get_dividends` | `ticker, period="5y"` | Get dividend payment history and current metrics |
 | `get_stock_splits` | `ticker` | Get stock split history |
@@ -140,14 +144,14 @@ code --add-mcp '{"name":"yfinance-ai","type":"stdio","command":"uvx","args":["yf
 
 ### Options
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `get_options_chain` | `ticker, expiration=""` | Get options chain data (calls and puts) |
 | `get_options_expirations` | `ticker` | Get all available options expiration dates |
 
 ### Market-wide
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `get_market_status` |  | Check if US stock markets are currently open |
 | `get_market_summary` | `region="US"` | Get a market overview for a region: open/closed status plus main indices, futures, bonds and FX |
@@ -160,7 +164,7 @@ code --add-mcp '{"name":"yfinance-ai","type":"stdio","command":"uvx","args":["yf
 
 ### Calendars
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `get_upcoming_earnings` | `days=7, limit=25` | Get the market-wide earnings calendar (which companies report in the next N days) |
 | `get_ipo_calendar` | `days=14, limit=25` | Get upcoming IPOs (exchange, expected date, price range, shares) |
@@ -169,7 +173,7 @@ code --add-mcp '{"name":"yfinance-ai","type":"stdio","command":"uvx","args":["yf
 
 ### Funds and ETFs
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `get_fund_overview` | `ticker` | Get overview data for an ETF or mutual fund |
 | `get_fund_holdings` | `ticker, limit=25` | Get top holdings for an ETF or mutual fund |
@@ -177,7 +181,7 @@ code --add-mcp '{"name":"yfinance-ai","type":"stdio","command":"uvx","args":["yf
 
 ### Crypto, forex and commodities
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `get_crypto_price` | `symbol` | Get cryptocurrency price and market data |
 | `get_forex_rate` | `pair` | Get foreign exchange (forex) rate for a currency pair |
@@ -185,7 +189,7 @@ code --add-mcp '{"name":"yfinance-ai","type":"stdio","command":"uvx","args":["yf
 
 ### Compare
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `compare_stocks` | `tickers` | Compare key metrics across multiple stocks |
 | `get_peer_comparison` | `ticker, peers=null` | Compare a stock with its peers on key metrics |
@@ -194,14 +198,14 @@ code --add-mcp '{"name":"yfinance-ai","type":"stdio","command":"uvx","args":["yf
 
 ### News and filings
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `get_stock_news` | `ticker, limit=10` | Get recent news articles about a stock |
 | `get_sec_filings` | `ticker` | Get recent SEC filings (10-K, 10-Q, 8-K, etc.) |
 
 ### Utility
 
-| Tool | Parameters | What it does |
+| Tool | Parameters | Description |
 |---|---|---|
 | `search_ticker` | `query` | Search for ticker symbols by company name or keyword |
 | `validate_ticker` | `ticker` | Validate if a ticker symbol exists and is tradeable |
