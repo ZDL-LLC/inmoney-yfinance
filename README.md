@@ -1,6 +1,19 @@
-# yfinance-ai MCP server
+# inmoney-yfinance
 
-<!-- mcp-name: io.github.lkcair/yfinance-ai -->
+<!-- mcp-name: io.github.ZDL-LLC/inmoney-yfinance -->
+
+A fork of [lkcair/yfinance-ai-mcp](https://github.com/lkcair/yfinance-ai-mcp) (MIT), run as a local
+MCP server by inmoney Desk. `yfinance_ai.py` stays byte for byte the upstream file
+(`./sync.sh`); the fork changes only the package name, the server name and packaging (`uv.lock`).
+Run it with `uv sync` and `uv run inmoney-yfinance` (stdio).
+
+Remotes: `upstream` is lkcair/yfinance-ai-mcp, `upstream-core` is lkcair/yfinance-ai.
+
+The upstream README follows.
+
+---
+
+# yfinance-ai MCP server
 
 [![PyPI](https://img.shields.io/pypi/v/yfinance-ai)](https://pypi.org/project/yfinance-ai/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 

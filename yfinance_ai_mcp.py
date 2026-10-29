@@ -1,5 +1,5 @@
 """
-MCP server for yfinance-ai.
+MCP server inmoney-yfinance (a fork of lkcair/yfinance-ai-mcp).
 
 Imports yfinance_ai.py as is and registers every public async method of its
 Tools class as an MCP tool. The docstring is split for MCP: the summary and
@@ -7,7 +7,7 @@ Returns become the tool description, each Args entry becomes that parameter's
 schema description, and Python examples are left out. yfinance_ai.py is not
 modified; OpenWebUI and ClawHub keep using it.
 
-Run: uvx yfinance-ai@latest
+Run: uv run inmoney-yfinance
 """
 
 import importlib.metadata
@@ -26,7 +26,7 @@ import yfinance_ai
 
 logger = logging.getLogger(__name__)
 
-PACKAGE = "yfinance-ai"
+PACKAGE = "inmoney-yfinance"
 
 # OpenWebUI injects these at call time; an MCP client cannot send them.
 HIDDEN_PARAMS = {"__event_emitter__", "__user__", "__metadata__"}
@@ -58,7 +58,7 @@ TITLE_WORDS = {
 
 # The routing guidance of the ClawHub skill (SKILL.md), without the CLI parts
 INSTRUCTIONS = """\
-yfinance-ai: 68 Yahoo Finance tools for stocks, ETFs, mutual funds, crypto, forex and commodities.
+inmoney-yfinance: 68 Yahoo Finance tools for stocks, ETFs, mutual funds, crypto, forex and commodities.
 
 Which tool:
 - Price or quote: get_stock_price (get_stock_quote for bid/ask and day range)
@@ -198,11 +198,11 @@ def build_server():
         n for n, _ in inspect.getmembers(tools, inspect.iscoroutinefunction) if not n.startswith("_")
     )
     server = MCPServer(
-        name="yfinance-ai",
-        title="yfinance-ai: Yahoo Finance",
+        name="inmoney-yfinance",
+        title="inmoney-yfinance",
         version=VERSION,
         instructions=INSTRUCTIONS,
-        website_url="https://github.com/lkcair/yfinance-ai-mcp",
+        website_url="https://github.com/ZDL-LLC/inmoney-yfinance",
     )
     for name in names:
         fn = _adapt(getattr(tools, name))
@@ -214,12 +214,12 @@ def build_server():
             annotations=ToolAnnotations(readOnlyHint=True, destructiveHint=False,
                                         idempotentHint=True, openWorldHint=True),
         )
-    logger.info("yfinance-ai MCP %s: %d tools registered", VERSION, len(names))
+    logger.info("inmoney-yfinance MCP %s: %d tools registered", VERSION, len(names))
     return server
 
 
 def main():
-    """Entry point for the `yfinance-ai` console script (stdio transport)."""
+    """Entry point for the `inmoney-yfinance` console script (stdio transport)."""
     logging.basicConfig(level=logging.INFO, stream=sys.stderr)
     build_server().run("stdio")
 
